@@ -1,7 +1,83 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.date;
+import java.util.Date;
+
+class Car {
+    private String numberPlate;
+    private String make;
+    private String model;
+    private int year;
+    private boolean isAvailable;
+
+    public Car(String numberPlate, String make, String model, int year, boolean isAvailable) {
+        this.numberPlate = numberPlate;
+        this.make = make;
+        this.model = model;
+        this.year = year;
+        this.isAvailable = isAvailable;
+    }
+
+    public String getNumberPlate() {
+        return numberPlate;
+    }
+
+    public String getMake() {
+        return make;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailability(boolean isAvailable) {
+        this.isAvailable = isAvailable;
+    }
+}
+
+class Customer {
+    private String name;
+
+    public Customer(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+
+class RentalTransaction {
+    private Customer customer;
+    private Car car;
+    private Date rentalDate;
+
+    public RentalTransaction(Customer customer, Car car) {
+        this.customer = customer;
+        this.car = car;
+        this.rentalDate = new Date();
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public Car getCar() {
+        return car;
+    }
+
+    public Date getRentalDate() {
+        return rentalDate;
+    }
+}
 
 public class CarRentalSystem {
     private List<Car> cars;
@@ -41,7 +117,7 @@ public class CarRentalSystem {
     public void displayAvailableCars() {
         for (Car car : cars) {
             if (car.isAvailable()) {
-                System.out.println(car.getnumberPlate() + " - " + car.getMake() + " " + car.getBrand() + " (" + car.getYear() + ")");
+                System.out.println(car.getNumberPlate() + " - " + car.getMake() + " " + car.getModel() + " (" + car.getYear() + ")");
             }
         }
     }
@@ -49,15 +125,15 @@ public class CarRentalSystem {
     public void displayCustomerRentalHistory(Customer customer) {
         for (RentalTransaction transaction : transactions) {
             if (transaction.getCustomer().equals(customer)) {
-                System.out.println("Rented " + transaction.getCar().getnumberPlate() + " on " + transaction.getRentalDate());
+                System.out.println("Rented " + transaction.getCar().getNumberPlate() + " on " + transaction.getRentalDate());
             }
         }
     }
 
     public static void main(String[] args) {
-        CarRentalSytem system = new CarRentalSystem();
+        CarRentalSystem system = new CarRentalSystem();
         Scanner scanner = new Scanner(System.in);
-    
+
         while (true) {
             System.out.println("Welcome to Car Rental System");
             System.out.println("1. Add Car");
@@ -69,35 +145,35 @@ public class CarRentalSystem {
             System.out.println("7. Exit");
             System.out.print("Enter your option: ");
             int option = scanner.nextInt();
-            scanner.nextLine();  
-    
+            scanner.nextLine();
+
             switch (option) {
                 case 1:
                     System.out.print("Enter plate Number: ");
-                    String Plate = scanner.nextLine();
+                    String plate = scanner.nextLine();
                     System.out.print("Enter maker: ");
                     String maker = scanner.nextLine();
                     System.out.print("Enter model: ");
                     String model = scanner.nextLine();
                     System.out.print("Enter year: ");
                     int year = scanner.nextInt();
-                    scanner.nextLine(); 
-                    Car car = new Car(Plate, maker, model, year, true);
-                    agency.addCar(car);
+                    scanner.nextLine();
+                    Car car = new Car(plate, maker, model, year, true);
+                    system.addNewCar(car);
                     System.out.println("Car added successfully!");
                     break;
                 case 2:
                     System.out.print("Enter customer name: ");
                     String name = scanner.nextLine();
                     Customer customer = new Customer(name);
-                    agency.addCustomer(customer);
+                    system.addNewCustomer(customer);
                     System.out.println("Customer added successfully!");
                     break;
                 case 3:
                     System.out.print("Enter customer name: ");
                     String customerName = scanner.nextLine();
                     Customer rentingCustomer = null;
-                    for (Customer c : agency.customers) {
+                    for (Customer c : system.customers) {
                         if (c.getName().equals(customerName)) {
                             rentingCustomer = c;
                             break;
@@ -107,12 +183,12 @@ public class CarRentalSystem {
                         System.out.println("Customer not found.");
                         break;
                     }
-                    agency.displayAvailableCars();
+                    system.displayAvailableCars();
                     System.out.print("Enter car plate: ");
                     String rentPlate = scanner.nextLine();
                     Car rentingCar = null;
-                    for (Car c : agency.cars) {
-                        if (c.getnumberPlate().equals(rentPlate)) {
+                    for (Car c : system.cars) {
+                        if (c.getNumberPlate().equals(rentPlate)) {
                             rentingCar = c;
                             break;
                         }
@@ -121,14 +197,14 @@ public class CarRentalSystem {
                         System.out.println("Car not found.");
                         break;
                     }
-                    agency.rentCar(rentingCustomer, rentingCar);
+                    system.rentCar(rentingCustomer, rentingCar);
                     break;
                 case 4:
                     System.out.print("Enter car plate number: ");
                     String returnPlate = scanner.nextLine();
                     Car returningCar = null;
-                    for (Car c : agency.cars) {
-                        if (c.getnumberPlate().equals(returnPlate)) {
+                    for (Car c : system.cars) {
+                        if (c.getNumberPlate().equals(returnPlate)) {
                             returningCar = c;
                             break;
                         }
@@ -137,16 +213,16 @@ public class CarRentalSystem {
                         System.out.println("Car not found.");
                         break;
                     }
-                    agency.returnCar(returningCar);
+                    system.returnCar(returningCar);
                     break;
                 case 5:
-                    agency.displayAvailableCars();
+                    system.displayAvailableCars();
                     break;
                 case 6:
                     System.out.print("Enter customer name: ");
                     String historyCustomerName = scanner.nextLine();
                     Customer historyCustomer = null;
-                    for (Customer c : agency.customers) {
+                    for (Customer c : system.customers) {
                         if (c.getName().equals(historyCustomerName)) {
                             historyCustomer = c;
                             break;
@@ -156,7 +232,7 @@ public class CarRentalSystem {
                         System.out.println("Customer not found.");
                         break;
                     }
-                    agency.displayCustomerRentalHistory(historyCustomer);
+                    system.displayCustomerRentalHistory(historyCustomer);
                     break;
                 case 7:
                     System.out.println("Exiting....");
@@ -167,5 +243,4 @@ public class CarRentalSystem {
             }
         }
     }
-    
 }
